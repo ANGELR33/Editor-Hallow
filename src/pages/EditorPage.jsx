@@ -56,10 +56,25 @@ button:hover {
 
 const EditorPage = () => {
     const [activeTab, setActiveTab] = useState('javascript');
-    const [jsCode, setJsCode] = useState(defaultJs);
-    const [htmlCode, setHtmlCode] = useState(defaultHtml);
-    const [cssCode, setCssCode] = useState(defaultCss);
+
+    // Initialize state from localStorage or defaults
+    const [jsCode, setJsCode] = useState(() => localStorage.getItem('halloween-editor-js') || defaultJs);
+    const [htmlCode, setHtmlCode] = useState(() => localStorage.getItem('halloween-editor-html') || defaultHtml);
+    const [cssCode, setCssCode] = useState(() => localStorage.getItem('halloween-editor-css') || defaultCss);
     const [showPreview, setShowPreview] = useState(false);
+
+    // Save to localStorage whenever code changes
+    React.useEffect(() => {
+        localStorage.setItem('halloween-editor-js', jsCode);
+    }, [jsCode]);
+
+    React.useEffect(() => {
+        localStorage.setItem('halloween-editor-html', htmlCode);
+    }, [htmlCode]);
+
+    React.useEffect(() => {
+        localStorage.setItem('halloween-editor-css', cssCode);
+    }, [cssCode]);
 
     const { output, isRunning, executeJavaScript, clearOutput } = useCodeExecution();
 

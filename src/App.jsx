@@ -6,7 +6,13 @@ import ChallengesPage from './pages/ChallengesPage';
 import './App.css';
 
 function App() {
-  const [activeMode, setActiveMode] = useState('home');
+  const [activeMode, setActiveMode] = useState(() => {
+    return localStorage.getItem('halloween-editor-mode') || 'home';
+  });
+
+  React.useEffect(() => {
+    localStorage.setItem('halloween-editor-mode', activeMode);
+  }, [activeMode]);
 
   const renderPage = () => {
     switch (activeMode) {

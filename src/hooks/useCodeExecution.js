@@ -1,55 +1,103 @@
 // Hook for executing JavaScript code safely
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 
 const useCodeExecution = () => {
     const [output, setOutput] = useState([]);
     const [isRunning, setIsRunning] = useState(false);
+    const workerRef = useRef(null);
 
-    const addOutput = (text, type = 'log') => {
+    const addOutput = useCallback((text, type = 'log') => {
         setOutput(prev => [...prev, { text: String(text), type, timestamp: Date.now() }]);
-    };
+    }, []);
 
     const clearOutput = useCallback(() => {
         setOutput([]);
     }, []);
 
+    const terminateExecution = useCallback(() => {
+        if (workerRef.current) {
+            workerRef.current.terminate();
+            workerRef.current = null;
+            setIsRunning(false);
+            addOutput('Ejecución detenida por el usuario.', 'info');
+        }
+    }, [addOutput]);
+
     const executeJavaScript = useCallback((code) => {
+        if (workerRef.current) {
+            workerRef.current.terminate();
+        }
+
         setIsRunning(true);
         clearOutput();
 
-        try {
-            // Create a custom console
-            const customConsole = {
-                log: (...args) => addOutput(args.map(a =>
-                    typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)
-                ).join(' '), 'log'),
-                error: (...args) => addOutput(args.join(' '), 'error'),
-                warn: (...args) => addOutput(args.join(' '), 'warn'),
-                info: (...args) => addOutput(args.join(' '), 'info'),
+        // Worker code as a string
+        const workerCode = `
+            self.onmessage = function(e) {
+                const { code } = e.data;
+                
+                const formatArg = (arg) => {
+                    if (typeof arg === 'undefined') return 'undefined';
+                    if (arg === null) return 'null';
+                    if (typeof arg === 'object') {
+                        try {
+                            return JSON.stringify(arg, null, 2);
+                        } catch (e) {
+                            return '[Circular Object]';
+                        }
+                    }
+                    return String(arg);
+                };
+
+                const customConsole = {
+                    log: (...args) => self.postMessage({ type: 'log', content: args.map(formatArg).join(' ') }),
+                    error: (...args) => self.postMessage({ type: 'error', content: args.map(formatArg).join(' ') }),
+                    warn: (...args) => self.postMessage({ type: 'warn', content: args.map(formatArg).join(' ') }),
+                    info: (...args) => self.postMessage({ type: 'info', content: args.map(formatArg).join(' ') }),
+                };
+
+                try {
+                    // Wrap code to use custom console
+                    const fn = new Function('console', code);
+                    const result = fn(customConsole);
+                    
+                    if (result !== undefined) {
+                        self.postMessage({ type: 'success', content: formatArg(result) });
+                    }
+                } catch (error) {
+                    self.postMessage({ type: 'error', content: 'Error: ' + error.message });
+                } finally {
+                    self.postMessage({ type: 'done' });
+                }
             };
+        `;
 
-            // Wrap code to capture console
-            const wrappedCode = `
-        (function(console) {
-          ${code}
-        })
-      `;
+        const blob = new Blob([workerCode], { type: 'application/javascript' });
+        const worker = new Worker(URL.createObjectURL(blob));
+        workerRef.current = worker;
 
-            // Execute
-            const fn = eval(wrappedCode);
-            const result = fn(customConsole);
+        worker.onmessage = (e) => {
+            const { type, content } = e.data;
 
-            if (result !== undefined) {
-                addOutput(`→ ${typeof result === 'object' ? JSON.stringify(result, null, 2) : result}`, 'success');
+            if (type === 'done') {
+                setIsRunning(false);
+                workerRef.current = null;
+            } else {
+                addOutput(content, type);
             }
+        };
 
-        } catch (error) {
-            addOutput(`Error: ${error.message}`, 'error');
-        } finally {
+        worker.onerror = (error) => {
+            addOutput(`Runtime Error: ${error.message}`, 'error');
             setIsRunning(false);
-        }
-    }, [clearOutput]);
+            workerRef.current = null;
+        };
 
+        worker.postMessage({ code });
+
+    }, [clearOutput, addOutput]);
+
+    // Keep runTests synchronous for now as they are usually simple assertions
     const runTests = useCallback((code, tests, functionName) => {
         const results = [];
 
@@ -89,13 +137,23 @@ const useCodeExecution = () => {
         return results;
     }, []);
 
+    // Cleanup worker on unmount
+    useEffect(() => {
+        return () => {
+            if (workerRef.current) {
+                workerRef.current.terminate();
+            }
+        };
+    }, []);
+
     return {
         output,
         isRunning,
         executeJavaScript,
         runTests,
         clearOutput,
-        addOutput
+        addOutput,
+        terminateExecution
     };
 };
 
