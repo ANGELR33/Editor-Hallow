@@ -56,6 +56,171 @@ const CodeEditor = ({
         monaco.editor.defineTheme('halloween-neon', halloweenTheme);
         monaco.editor.setTheme('halloween-neon');
 
+        // Configure HTML auto-closing tags
+        monaco.languages.html.htmlDefaults.setOptions({
+            format: {
+                tabSize: 2,
+                insertSpaces: true,
+                wrapLineLength: 120,
+                unformatted: 'default',
+                contentUnformatted: 'pre',
+                indentInnerHtml: false,
+                preserveNewLines: true,
+                maxPreserveNewLines: null,
+                indentHandlebars: false,
+                endWithNewline: false,
+                extraLiners: 'head, body, /html',
+                wrapAttributes: 'auto',
+            },
+            suggest: {
+                html5: true,
+            },
+        });
+
+        // Ensure auto-closing tags works
+        monaco.languages.registerCompletionItemProvider('html', {
+            triggerCharacters: ['>'],
+            provideCompletionItems: (model, position) => {
+                const codePre = model.getValueInRange({
+                    startLineNumber: position.lineNumber,
+                    startColumn: 1,
+                    endLineNumber: position.lineNumber,
+                    endColumn: position.column,
+                });
+
+                const tag = codePre.match(/<(\w+)>$/);
+
+                if (!tag) {
+                    return;
+                }
+
+                const tagName = tag[1];
+
+                // Void elements that don't need closing tags
+                const voidElements = [
+                    'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+                    'link', 'meta', 'param', 'source', 'track', 'wbr'
+                ];
+
+                if (voidElements.includes(tagName)) {
+                    return;
+                }
+
+                return {
+                    suggestions: [
+                        {
+                            label: `</${tagName}>`,
+                            kind: monaco.languages.CompletionItemKind.Snippet,
+                            insertText: `$0</${tagName}>`,
+                            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                            documentation: `Auto-close tag </${tagName}>`,
+                            range: {
+                                startLineNumber: position.lineNumber,
+                                startColumn: position.column,
+                                endLineNumber: position.lineNumber,
+                                endColumn: position.column,
+                            }
+                        },
+                    ],
+                };
+            },
+        });
+
+        // JavaScript Snippets
+        monaco.languages.registerCompletionItemProvider('javascript', {
+            provideCompletionItems: (model, position) => {
+                const suggestions = [
+                    {
+                        label: 'clg',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: 'console.log(${1:value});',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'Log to console'
+                    },
+                    {
+                        label: 'log',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: 'console.log(${1:value});',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'Log to console'
+                    },
+                    {
+                        label: 'for',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: 'for (let ${1:i} = 0; ${1:i} < ${2:array}.length; ${1:i}++) {\n\t$0\n}',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'For Loop'
+                    },
+                    {
+                        label: 'if',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: 'if (${1:condition}) {\n\t$0\n}',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'If Statement'
+                    },
+                    {
+                        label: 'fun',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: 'function ${1:name}(${2:params}) {\n\t$0\n}',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'Function Declaration'
+                    },
+                    {
+                        label: 'afn',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: 'const ${1:name} = (${2:params}) => {\n\t$0\n}',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'Arrow Function'
+                    }
+                ];
+                return { suggestions: suggestions };
+            }
+        });
+
+        // Enhanced HTML Snippets
+        monaco.languages.registerCompletionItemProvider('html', {
+            provideCompletionItems: (model, position) => {
+                const suggestions = [
+                    {
+                        label: 'div',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '<div>$0</div>',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'Div element'
+                    },
+                    {
+                        label: 'img',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '<img src="${1:url}" alt="${2:description}" />',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'Image element'
+                    },
+                    {
+                        label: 'a',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '<a href="${1:url}">$0</a>',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'Anchor element'
+                    },
+                    {
+                        label: 'link',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '<link rel="stylesheet" href="${1:style.css}">',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'Link element'
+                    },
+                    {
+                        label: '!html',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '<!DOCTYPE html>\n<html lang="en">\n<head>\n\t<meta charset="UTF-8">\n\t<meta name="viewport" content="width=device-width, initial-scale=1.0">\n\t<title>${1:Document}</title>\n</head>\n<body>\n\t$0\n</body>\n</html>',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'HTML5 Boilerplate'
+                    }
+                ];
+                return { suggestions: suggestions };
+            }
+        });
+
         editor.updateOptions({
             fontSize: 15,
             fontFamily: "'Source Code Pro', 'JetBrains Mono', monospace", // Changed to Source Code Pro
@@ -92,6 +257,13 @@ const CodeEditor = ({
             insertSpaces: true,
             formatOnPaste: true,
             formatOnType: true,
+            autoClosingBrackets: 'always',
+            autoClosingQuotes: 'always',
+            autoClosingOvertype: 'always',
+            autoSurround: 'languageDefined',
+            acceptSuggestionOnEnter: 'on',
+            tabCompletion: 'on',
+            snippetSuggestions: 'top',
         });
     };
 
