@@ -1,0 +1,179 @@
+.terminal-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: transparent;
+    /* Transparent to blend with panel */
+    border-radius: 0;
+    overflow: hidden;
+    border: none;
+}
+
+.terminal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    height: 40px;
+}
+
+.terminal-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.terminal-title svg {
+    color: var(--green-ghost);
+    width: 14px;
+    height: 14px;
+}
+
+.running-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--yellow-candle);
+    font-size: 11px;
+    background: rgba(255, 208, 0, 0.1);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.running-indicator::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--yellow-candle);
+    animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+}
+
+.terminal-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.terminal-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.terminal-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+}
+
+.terminal-output {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.terminal-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--text-muted);
+    height: 100%;
+    opacity: 0.5;
+}
+
+.terminal-empty svg {
+    width: 32px;
+    height: 32px;
+    color: var(--text-muted);
+}
+
+.terminal-muted {
+    font-style: italic;
+    font-size: 12px;
+}
+
+.terminal-line {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 4px;
+    animation: fadeInLine 0.2s ease-out;
+}
+
+@keyframes fadeInLine {
+    from {
+        opacity: 0;
+        transform: translateX(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.terminal-prompt {
+    flex-shrink: 0;
+    color: var(--green-ghost);
+    font-weight: 600;
+    user-select: none;
+}
+
+.terminal-text {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.terminal-line.error .terminal-prompt {
+    color: var(--red-blood);
+}
+
+.terminal-line.error .terminal-text {
+    color: var(--red-blood);
+}
+
+.terminal-line.success .terminal-prompt {
+    color: var(--green-ghost);
+}
+
+.terminal-line.success .terminal-text {
+    color: var(--green-ghost);
+}
+
+.terminal-line.log .terminal-text {
+    color: var(--text-primary);
+}
+
+.terminal-line.info .terminal-text {
+    color: var(--blue-spirit);
+}
