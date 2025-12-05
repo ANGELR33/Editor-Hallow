@@ -343,6 +343,20 @@ const CodeEditor = ({
                         documentation: 'HTML5 Boilerplate'
                     },
                     {
+                        label: '!',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '<!DOCTYPE html>\n<html lang="en">\n<head>\n\t<meta charset="UTF-8">\n\t<meta name="viewport" content="width=device-width, initial-scale=1.0">\n\t<title>${1:Document}</title>\n</head>\n<body>\n\t$0\n</body>\n</html>',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'HTML5 Boilerplate'
+                    },
+                    {
+                        label: 'doc',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '<!DOCTYPE html>\n<html lang="en">\n<head>\n\t<meta charset="UTF-8">\n\t<meta name="viewport" content="width=device-width, initial-scale=1.0">\n\t<title>${1:Document}</title>\n</head>\n<body>\n\t$0\n</body>\n</html>',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'HTML5 Boilerplate'
+                    },
+                    {
                         label: 'img',
                         kind: monaco.languages.CompletionItemKind.Snippet,
                         insertText: '<img src="${1:url}" alt="${2:description}" />',
