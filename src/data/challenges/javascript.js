@@ -283,9 +283,9 @@ const monsters = [
 console.log(groupByProperty(monsters, 'type'));
 // Esperado: { undead: [...], spirit: [...] }`,
     tests: [
-      { 
-        input: [[{a: 1, b: 'x'}, {a: 2, b: 'x'}, {a: 3, b: 'y'}], 'b'],
-        expected: { x: [{a: 1, b: 'x'}, {a: 2, b: 'x'}], y: [{a: 3, b: 'y'}] }
+      {
+        input: [[{ a: 1, b: 'x' }, { a: 2, b: 'x' }, { a: 3, b: 'y' }], 'b'],
+        expected: { x: [{ a: 1, b: 'x' }, { a: 2, b: 'x' }], y: [{ a: 3, b: 'y' }] }
       }
     ],
     solution: `function groupByProperty(items, property) {
@@ -363,6 +363,77 @@ function debounce(fn, delay) {
       '💡 Necesitas una variable para guardar el timeoutId',
       '💡 Retorna una nueva función (closure)',
       '💡 Usa clearTimeout para cancelar ejecuciones previas'
+    ]
+
+  },
+  {
+    id: 'js-intermedio-004',
+    title: 'La fusión de las sombras',
+    level: 'intermedio',
+    language: 'javascript',
+    description: 'Combina dos objetos, fusionando sus propiedades (Deep Merge).',
+    theory: {
+      concept: 'Deep Merge vs Shallow Merge',
+      explanation: `**Shallow Merge** (Object.assign, {...a, ...b}) solo copia propiedades del primer nivel. Si hay objetos anidados, se sobrescriben por referencia.
+      
+**Deep Merge** combina recursivamente objetos anidados.
+
+\`\`\`javascript
+function deepMerge(target, source) {
+  for (const key in source) {
+    if (source[key] instanceof Object) {
+      if (!target[key]) Object.assign(target, { [key]: {} });
+      deepMerge(target[key], source[key]);
+    } else {
+      Object.assign(target, { [key]: source[key] });
+    }
+  }
+  return target;
+}
+\`\`\``,
+      keyPoints: [
+        'Shallow copy solo copia referencias de objetos anidados',
+        'Deep copy crea nuevas instancias de todo el árbol',
+        'Recursión es clave para navegar estructuras profundas'
+      ],
+      realWorldUse: 'Configuraciones de usuario que sobrescriben defaults, estado en Redux.'
+    },
+    starterCode: `function mergeShadows(obj1, obj2) {
+  // Retorna un nuevo objeto que combine obj1 y obj2
+  // Si ambos tienen la misma propiedad y es un objeto, fusiónalos también
+  // Si es primitivo, obj2 gana
+  
+}`,
+    tests: [
+      {
+        input: [{ a: 1, b: { x: 1 } }, { b: { y: 2 }, c: 3 }],
+        expected: { a: 1, b: { x: 1, y: 2 }, c: 3 }
+      }
+    ],
+    solution: `function mergeShadows(target, source) {
+  const output = Object.assign({}, target);
+  if (isObject(target) && isObject(source)) {
+    Object.keys(source).forEach(key => {
+      if (isObject(source[key])) {
+        if (!(key in target))
+          Object.assign(output, { [key]: source[key] });
+        else
+          output[key] = mergeShadows(target[key], source[key]);
+      } else {
+        Object.assign(output, { [key]: source[key] });
+      }
+    });
+  }
+  return output;
+}
+
+function isObject(item) {
+  return (item && typeof item === 'object' && !Array.isArray(item));
+}`,
+    hints: [
+      '💡 Verifica si ambas propiedades son objetos',
+      '💡 Usa recursión para objetos anidados',
+      '💡 Object.assign o spread operator {...} para el nivel base'
     ]
   },
 
@@ -493,7 +564,7 @@ const haunted = {
 console.log(flattenObject(haunted));
 // Esperado: { 'room.ghost.name': 'Casper', 'room.ghost.age': 100 }`,
     tests: [
-      { 
+      {
         input: [{ a: { b: 1, c: 2 } }],
         expected: { 'a.b': 1, 'a.c': 2 }
       }

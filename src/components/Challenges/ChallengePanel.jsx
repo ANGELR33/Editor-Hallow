@@ -39,9 +39,31 @@ const ChallengePanel = ({
                     {challenge.theory.concept}
                 </h3>
                 <div className="theory-content">
-                    <p className="theory-explanation">
-                        {challenge.theory.explanation}
-                    </p>
+                    <div className="theory-explanation">
+                        {challenge.theory.explanation.split('\n').map((line, i) => {
+                            // Simple markdown parsing
+                            // Bold: **text**
+                            // Code block: ```code``` (handled simply as pre-wrap for now or inline)
+
+                            if (line.trim().startsWith('```')) return null; // Skip code fence markers for now or handle better
+
+                            const parts = line.split(/(\*\*.*?\*\*|`.*?`)/g);
+
+                            return (
+                                <p key={i} style={{ minHeight: '1rem', marginBottom: '0.5rem' }}>
+                                    {parts.map((part, j) => {
+                                        if (part.startsWith('**') && part.endsWith('**')) {
+                                            return <strong key={j}>{part.slice(2, -2)}</strong>;
+                                        }
+                                        if (part.startsWith('`') && part.endsWith('`')) {
+                                            return <code key={j} className="inline-code">{part.slice(1, -1)}</code>;
+                                        }
+                                        return part;
+                                    })}
+                                </p>
+                            );
+                        })}
+                    </div>
 
                     <div className="key-points">
                         <h4>Puntos Clave</h4>
