@@ -126,291 +126,166 @@ const CodeEditor = ({
             },
         });
 
-        // JavaScript Snippets
+        // JavaScript Snippets (Context-Aware)
         monaco.languages.registerCompletionItemProvider('javascript', {
+            triggerCharacters: ['.'],
             provideCompletionItems: (model, position) => {
-                const suggestions = [
-                    // Console
-                    {
-                        label: 'clg',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'console.log(${1:value});',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Log to console'
-                    },
-                    {
-                        label: 'log',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'console.log(${1:value});',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Log to console'
-                    },
-                    // Loops
-                    {
-                        label: 'for',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'for (let ${1:i} = 0; ${1:i} < ${2:array}.length; ${1:i}++) {\n\t$0\n}',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'For Loop'
-                    },
-                    {
-                        label: 'while',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'while (${1:condition}) {\n\t$0\n}',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'While Loop'
-                    },
-                    {
-                        label: 'dowhile',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'do {\n\t$0\n} while (${1:condition});',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Do-While Loop'
-                    },
-                    // Conditionals
-                    {
-                        label: 'if',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'if (${1:condition}) {\n\t$0\n}',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'If Statement'
-                    },
-                    {
-                        label: 'ifelse',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'if (${1:condition}) {\n\t$2\n} else {\n\t$0\n}',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'If-Else Statement'
-                    },
-                    {
-                        label: 'switch',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'switch (${1:key}) {\n\tcase ${2:value}:\n\t\t$0\n\t\tbreak;\n\tdefault:\n\t\tbreak;\n}',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Switch Statement'
-                    },
-                    {
-                        label: 'trycatch',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'try {\n\t$1\n} catch (error) {\n\t$0\n}',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Try-Catch Block'
-                    },
-                    // Functions
-                    {
-                        label: 'fun',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'function ${1:name}(${2:params}) {\n\t$0\n}',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Function Declaration'
-                    },
-                    {
-                        label: 'afn',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'const ${1:name} = (${2:params}) => {\n\t$0\n}',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Arrow Function'
-                    },
-                    {
-                        label: 'arrow',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: '(${1:params}) => ${0:return}',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Implicit Return Arrow Function'
-                    },
-                    // Async
-                    {
-                        label: 'promise',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'new Promise((resolve, reject) => {\n\t$0\n})',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'New Promise'
-                    },
-                    {
-                        label: 'async',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'async function ${1:name}(${2:params}) {\n\t$0\n}',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Async Function'
-                    },
-                    // Array Methods
-                    {
-                        label: 'map',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: '${1:array}.map((${2:item}) => {\n\t$0\n})',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Array Map'
-                    },
-                    {
-                        label: 'filter',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: '${1:array}.filter((${2:item}) => {\n\t$0\n})',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Array Filter'
-                    },
-                    {
-                        label: 'reduce',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: '${1:array}.reduce((acc, ${2:curr}) => {\n\t$0\n}, ${3:initial})',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Array Reduce'
-                    },
-                    // More Array Methods
-                    {
-                        label: 'forEach',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: '${1:array}.forEach((${2:item}) => {\n\t$0\n})',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Array forEach'
-                    },
-                    {
-                        label: 'find',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: '${1:array}.find((${2:item}) => ${3:condition})',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Array Find'
-                    },
-                    {
-                        label: 'reverse',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: '${1:array}.reverse()',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Array Reverse'
-                    },
-                    {
-                        label: 'join',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: '${1:array}.join(\'${2:separator}\')',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Array Join'
-                    },
-                    {
-                        label: 'push',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: '${1:array}.push(${2:item})',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Array Push'
-                    },
-                    {
-                        label: 'pop',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: '${1:array}.pop()',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Array Pop'
-                    },
-                    // String Methods
-                    {
-                        label: 'split',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: '${1:string}.split(\'${2:separator}\')',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'String Split'
-                    },
-                    {
-                        label: 'substring',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: '${1:string}.substring(${2:start}, ${3:end})',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'String Substring'
-                    },
-                    {
-                        label: 'toLowerCase',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: '${1:string}.toLowerCase()',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'String toLowerCase'
-                    },
-                    {
-                        label: 'toUpperCase',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: '${1:string}.toUpperCase()',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'String toUpperCase'
-                    },
-                    {
-                        label: 'replace',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: '${1:string}.replace(/${2:regex}/, \'${3:replacement}\')',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'String Replace'
-                    },
-                    // DOM
-                    {
-                        label: 'query',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'document.querySelector(\'${1:selector}\')',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'querySelector'
-                    },
-                    {
-                        label: 'queryAll',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'document.querySelectorAll(\'${1:selector}\')',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'querySelectorAll'
-                    },
-                    {
-                        label: 'addEvent',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: '${1:element}.addEventListener(\'${2:event}\', (e) => {\n\t$0\n});',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'addEventListener'
-                    },
-                    // Classes
-                    {
-                        label: 'class',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'class ${1:Name} {\n\tconstructor(${2:params}) {\n\t\t$0\n\t}\n}',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Class Declaration'
-                    },
-                    // Modules
-                    {
-                        label: 'import',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'import ${1:module} from \'${2:path}\';',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Import Statement'
-                    },
-                    {
-                        label: 'export',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'export default ${1:module};',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Export Default'
-                    }
+                const textUntilPosition = model.getValueInRange({
+                    startLineNumber: position.lineNumber,
+                    startColumn: 1,
+                    endLineNumber: position.lineNumber,
+                    endColumn: position.column
+                });
+
+                const hasDot = textUntilPosition.trim().endsWith('.');
+
+                // 1. Structure Snippets (Top-level only)
+                const structureSnippets = [
+                    { label: 'clg', insertText: 'console.log(${1:value});', doc: 'Log to console' },
+                    { label: 'log', insertText: 'console.log(${1:value});', doc: 'Log to console' },
+                    { label: 'for', insertText: 'for (let ${1:i} = 0; ${1:i} < ${2:array}.length; ${1:i}++) {\n\t$0\n}', doc: 'For Loop' },
+                    { label: 'while', insertText: 'while (${1:condition}) {\n\t$0\n}', doc: 'While Loop' },
+                    { label: 'dowhile', insertText: 'do {\n\t$0\n} while (${1:condition});', doc: 'Do-While Loop' },
+                    { label: 'if', insertText: 'if (${1:condition}) {\n\t$0\n}', doc: 'If Statement' },
+                    { label: 'ifelse', insertText: 'if (${1:condition}) {\n\t$2\n} else {\n\t$0\n}', doc: 'If-Else Statement' },
+                    { label: 'switch', insertText: 'switch (${1:key}) {\n\tcase ${2:value}:\n\t\t$0\n\t\tbreak;\n\tdefault:\n\t\tbreak;\n}', doc: 'Switch Statement' },
+                    { label: 'trycatch', insertText: 'try {\n\t$1\n} catch (error) {\n\t$0\n}', doc: 'Try-Catch Block' },
+                    { label: 'fun', insertText: 'function ${1:name}(${2:params}) {\n\t$0\n}', doc: 'Function Declaration' },
+                    { label: 'afn', insertText: 'const ${1:name} = (${2:params}) => {\n\t$0\n}', doc: 'Arrow Function' },
+                    { label: 'arrow', insertText: '(${1:params}) => ${0:return}', doc: 'Implicit Return Arrow Function' },
+                    { label: 'promise', insertText: 'new Promise((resolve, reject) => {\n\t$0\n})', doc: 'New Promise' },
+                    { label: 'async', insertText: 'async function ${1:name}(${2:params}) {\n\t$0\n}', doc: 'Async Function' },
+                    { label: 'class', insertText: 'class ${1:Name} {\n\tconstructor(${2:params}) {\n\t\t$0\n\t}\n}', doc: 'Class Declaration' },
+                    { label: 'import', insertText: 'import ${1:module} from \'${2:path}\';', doc: 'Import Statement' },
+                    { label: 'export', insertText: 'export default ${1:module};', doc: 'Export Default' }
                 ];
+
+                // 2. Member Snippets (Methods on objects)
+                // insertText is for the DOT case (no prefix)
+                const memberSnippets = [
+                    // Array/Generics
+                    { label: 'map', insertText: 'map((${1:item}) => {\n\t$0\n})', doc: 'Array Map' },
+                    { label: 'filter', insertText: 'filter((${1:item}) => {\n\t$0\n})', doc: 'Array Filter' },
+                    { label: 'reduce', insertText: 'reduce((acc, ${1:curr}) => {\n\t$0\n}, ${2:initial})', doc: 'Array Reduce' },
+                    { label: 'forEach', insertText: 'forEach((${1:item}) => {\n\t$0\n})', doc: 'Array forEach' },
+                    { label: 'find', insertText: 'find((${1:item}) => ${2:condition})', doc: 'Array Find' },
+                    { label: 'reverse', insertText: 'reverse()', doc: 'Array Reverse' },
+                    { label: 'join', insertText: 'join(\'${1:separator}\')', doc: 'Array Join' },
+                    { label: 'push', insertText: 'push(${1:item})', doc: 'Array Push' },
+                    { label: 'pop', insertText: 'pop()', doc: 'Array Pop' },
+                    // String
+                    { label: 'split', insertText: 'split(\'${1:separator}\')', doc: 'String Split' },
+                    { label: 'substring', insertText: 'substring(${1:start}, ${2:end})', doc: 'String Substring' },
+                    { label: 'toLowerCase', insertText: 'toLowerCase()', doc: 'String toLowerCase' },
+                    { label: 'toUpperCase', insertText: 'toUpperCase()', doc: 'String toUpperCase' },
+                    { label: 'replace', insertText: 'replace(/${1:regex}/, \'${2:replacement}\')', doc: 'String Replace' },
+                    // DOM
+                    { label: 'querySelector', insertText: 'querySelector(\'${1:selector}\')', doc: 'querySelector' },
+                    { label: 'querySelectorAll', insertText: 'querySelectorAll(\'${1:selector}\')', doc: 'querySelectorAll' },
+                    { label: 'addEventListener', insertText: 'addEventListener(\'${1:event}\', (e) => {\n\t$0\n});', doc: 'addEventListener' },
+                ];
+
+                const suggestions = [];
+
+                if (hasDot) {
+                    // Usage: myVar.| -> suggests "split(...)", "map(...)", etc.
+                    memberSnippets.forEach(item => {
+                        suggestions.push({
+                            label: item.label,
+                            kind: monaco.languages.CompletionItemKind.Method,
+                            insertText: item.insertText,
+                            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                            documentation: item.doc
+                        });
+                    });
+                } else {
+                    // Usage: sp| -> suggests "string.split(...)" (generative) OR simple structure "if"
+                    structureSnippets.forEach(item => {
+                        suggestions.push({
+                            label: item.label,
+                            kind: monaco.languages.CompletionItemKind.Snippet,
+                            insertText: item.insertText,
+                            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                            documentation: item.doc
+                        });
+                    });
+
+                    // Add member snippets in "Generative" mode (prefixed with typical variables)
+                    memberSnippets.forEach(item => {
+                        let prefix = '${1:array}';
+                        if (['split', 'substring', 'toLowerCase', 'toUpperCase', 'replace'].includes(item.label)) {
+                            prefix = '${1:string}';
+                        } else if (['querySelector', 'querySelectorAll', 'addEventListener'].includes(item.label)) {
+                            prefix = 'document';
+                        }
+
+                        // Increment placeholders for generative mode
+                        let newInsertText = item.insertText
+                            .replace(/\$\{(\d+):/g, (match, n) => `\$\{${parseInt(n) + 1}:`)
+                            .replace(/\$\{(\d+)\}/g, (match, n) => `\$\{${parseInt(n) + 1}\}`);
+
+                        suggestions.push({
+                            label: item.label,
+                            kind: monaco.languages.CompletionItemKind.Snippet,
+                            insertText: `${prefix}.${newInsertText}`,
+                            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                            documentation: item.doc
+                        });
+                    });
+                }
+
                 return { suggestions: suggestions };
             }
         });
 
-        // Enhanced HTML Snippets (Emmet-like)
+        // Enhanced HTML Snippets
         monaco.languages.registerCompletionItemProvider('html', {
             provideCompletionItems: (model, position) => {
                 const tags = [
                     // Structure
                     'html', 'head', 'body', 'div', 'span', 'header', 'footer', 'main', 'section', 'article', 'aside', 'nav',
                     // Text
-                    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'strong', 'em', 'br', 'hr',
+                    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'strong', 'em', 'br', 'hr', 'blockquote', 'code', 'pre',
                     // Lists
                     'ul', 'ol', 'li', 'dl', 'dt', 'dd',
                     // Forms
-                    'form', 'input', 'textarea', 'button', 'select', 'option', 'label', 'fieldset', 'legend',
+                    'form', 'button', 'select', 'option', 'label', 'fieldset', 'legend',
                     // Tables
                     'table', 'thead', 'tbody', 'tr', 'th', 'td',
-                    // Media
-                    'img', 'video', 'audio', 'source', 'canvas', 'svg',
+                    // Media (non-void)
+                    'video', 'audio', 'canvas', 'svg', 'iframe',
                     // Scripting
-                    'script', 'style', 'link', 'meta'
+                    'script', 'style', 'title'
                 ];
 
-                const suggestions = tags.map(tag => ({
-                    label: tag,
-                    kind: monaco.languages.CompletionItemKind.Snippet,
-                    insertText: `<${tag}>$0</${tag}>`,
-                    insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                    documentation: `<${tag}> element`
-                }));
+                const voidElements = [
+                    'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+                    'link', 'meta', 'param', 'source', 'track', 'wbr'
+                ];
+
+                const suggestions = [];
+
+                // Standard open/close tags
+                tags.forEach(tag => {
+                    suggestions.push({
+                        label: tag,
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: `<${tag}>$0</${tag}>`,
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: `<${tag}> element`
+                    });
+                });
+
+                // Void tags (self-closing or just open)
+                voidElements.forEach(tag => {
+                    suggestions.push({
+                        label: tag,
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: `<${tag} \/>`, // Self-closing style for clearer intent, though HTML5 allows just >
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: `<${tag}> void element`
+                    });
+                });
 
                 // Custom complex snippets
                 const customSnippets = [
@@ -422,18 +297,18 @@ const CodeEditor = ({
                         documentation: 'HTML5 Boilerplate'
                     },
                     {
-                        label: '!',
+                        label: 'input', // Override basic void input
                         kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: '<!DOCTYPE html>\n<html lang="en">\n<head>\n\t<meta charset="UTF-8">\n\t<meta name="viewport" content="width=device-width, initial-scale=1.0">\n\t<title>${1:Document}</title>\n</head>\n<body>\n\t$0\n</body>\n</html>',
+                        insertText: '<input type="${1:text}" placeholder="${2}" />',
                         insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'HTML5 Boilerplate'
+                        documentation: 'Input element'
                     },
                     {
-                        label: 'doc',
+                        label: 'input:c',
                         kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: '<!DOCTYPE html>\n<html lang="en">\n<head>\n\t<meta charset="UTF-8">\n\t<meta name="viewport" content="width=device-width, initial-scale=1.0">\n\t<title>${1:Document}</title>\n</head>\n<body>\n\t$0\n</body>\n</html>',
+                        insertText: '<input type="checkbox" id="${1}" name="${2}" />',
                         insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'HTML5 Boilerplate'
+                        documentation: 'Checkbox Input'
                     },
                     {
                         label: 'img',
@@ -450,11 +325,11 @@ const CodeEditor = ({
                         documentation: 'Anchor element'
                     },
                     {
-                        label: 'link',
+                        label: 'link:css',
                         kind: monaco.languages.CompletionItemKind.Snippet,
                         insertText: '<link rel="stylesheet" href="${1:style.css}">',
                         insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Link element'
+                        documentation: 'CSS Link'
                     },
                     {
                         label: 'script:src',
@@ -462,13 +337,6 @@ const CodeEditor = ({
                         insertText: '<script src="${1:script.js}"></script>',
                         insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
                         documentation: 'Script with src'
-                    },
-                    {
-                        label: 'input',
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: '<input type="${1:text}" placeholder="${2}" />',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                        documentation: 'Input element'
                     },
                     {
                         label: 'meta:vp',
@@ -479,14 +347,17 @@ const CodeEditor = ({
                     }
                 ];
 
-                // Merge auto-generated and custom snippets (custom overrides if needed, but here we just append)
-                // Filter out tags that have custom snippets to avoid duplicates if necessary, or just rely on label uniqueness
-                const finalSuggestions = [
-                    ...suggestions.filter(s => !customSnippets.find(c => c.label === s.label)),
-                    ...customSnippets
-                ];
+                // Add custom snippets (filtering duplicates from basic lists if needed, but 'input' is handled by override order or filter)
+                customSnippets.forEach(custom => {
+                    // Remove existing entry if it exists to prioritize custom one
+                    const existingIndex = suggestions.findIndex(s => s.label === custom.label);
+                    if (existingIndex !== -1) {
+                        suggestions.splice(existingIndex, 1);
+                    }
+                    suggestions.push(custom);
+                });
 
-                return { suggestions: finalSuggestions };
+                return { suggestions: suggestions };
             }
         });
 
