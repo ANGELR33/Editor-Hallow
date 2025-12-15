@@ -255,6 +255,85 @@ const CodeEditor = ({
                         insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
                         documentation: 'Array Reduce'
                     },
+                    // More Array Methods
+                    {
+                        label: 'forEach',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '${1:array}.forEach((${2:item}) => {\n\t$0\n})',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'Array forEach'
+                    },
+                    {
+                        label: 'find',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '${1:array}.find((${2:item}) => ${3:condition})',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'Array Find'
+                    },
+                    {
+                        label: 'reverse',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '${1:array}.reverse()',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'Array Reverse'
+                    },
+                    {
+                        label: 'join',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '${1:array}.join(\'${2:separator}\')',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'Array Join'
+                    },
+                    {
+                        label: 'push',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '${1:array}.push(${2:item})',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'Array Push'
+                    },
+                    {
+                        label: 'pop',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '${1:array}.pop()',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'Array Pop'
+                    },
+                    // String Methods
+                    {
+                        label: 'split',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '${1:string}.split(\'${2:separator}\')',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'String Split'
+                    },
+                    {
+                        label: 'substring',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '${1:string}.substring(${2:start}, ${3:end})',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'String Substring'
+                    },
+                    {
+                        label: 'toLowerCase',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '${1:string}.toLowerCase()',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'String toLowerCase'
+                    },
+                    {
+                        label: 'toUpperCase',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '${1:string}.toUpperCase()',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'String toUpperCase'
+                    },
+                    {
+                        label: 'replace',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '${1:string}.replace(/${2:regex}/, \'${3:replacement}\')',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'String Replace'
+                    },
                     // DOM
                     {
                         label: 'query',
